@@ -5,7 +5,8 @@ from pyld import jsonld
 import falcon
 
 
-CONST_BASE_URL = 'https://trng-b2share.eudat.eu/api/'
+#CONST_BASE_URL = 'https://trng-b2share.eudat.eu/api/'
+CONST_BASE_URL = 'https://b2share.eudat.eu/api/'
 
 
 class Field:
@@ -101,7 +102,7 @@ class Model:
 
         :returns: list of cls instances.
         """
-        uri = '{url}{resource}?{query}'.format(url=CONST_BASE_URL,
+        uri = '{url}/{resource}?{query}'.format(url=CONST_BASE_URL,
                                                resource=cls.resource_name, query=query,)
         doc = cls.load_document(uri)
 
