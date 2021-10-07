@@ -3,10 +3,14 @@ import datetime
 import statistics
 from pyld import jsonld
 
-def test_get_all_communities(client):
-    result = client.simulate_get('/catalogs')
+CONST_NUM_COMMUNITIES = 21
 
-    assert len(result.json) == 14
+def test_get_all_communities(client):
+    result = client.simulate_get('/catalogs/')
+
+    # This test will fail if number of communities 
+    # at given B2SHARE instance changes.
+    assert len(result.json) == CONST_NUM_COMMUNITIES
 
 
 def test_get_community_by_id(client):
@@ -16,50 +20,50 @@ def test_get_community_by_id(client):
     assert result.json['dct:title'] == 'Aalto'
 
 
-def test_performance_get_all_catalogs(client):
-    numCalls = 3
-    numCallsBlocks = 3
+# def test_performance_get_all_catalogs(client):
+#     numCalls = 3
+#     numCallsBlocks = 3
 
-    results = []
-    for i in range(1,numCallsBlocks):
-        result = compute_difference(numCalls, "")
-        results.append(result)
-        print("Time difference of FDP compared to B2 (%): " + str(result))
+#     results = []
+#     for i in range(1,numCallsBlocks):
+#         result = compute_difference(numCalls, "")
+#         results.append(result)
+#         print("Time difference of FDP compared to B2 (%): " + str(result))
 
-    # Remove anomalies
-    std_dev = statistics.stdev(results)
-    mean = statistics.mean(results)
-    anomalies = 0
-    filteredResults = []
-    for result in results:
-        if result > mean + std_dev:
-            anomalies += 1
-        elif result < mean - std_dev:
-            anomalies += 1
-        else:
-            filteredResults.append(result)
+#     # Remove anomalies
+#     std_dev = statistics.stdev(results)
+#     mean = statistics.mean(results)
+#     anomalies = 0
+#     filteredResults = []
+#     for result in results:
+#         if result > mean + std_dev:
+#             anomalies += 1
+#         elif result < mean - std_dev:
+#             anomalies += 1
+#         else:
+#             filteredResults.append(result)
 
-    avg_percent = statistics.mean(filteredResults)
-    print("Average (%): " + str(avg_percent))
-    print("Anomalies: " + str(anomalies))
+#     avg_percent = statistics.mean(filteredResults)
+#     print("Average (%): " + str(avg_percent))
+#     print("Anomalies: " + str(anomalies))
 
-    #assert False
+#     #assert False
 
 
-def test_performance_get_id_catalogs(client):
-    numCalls = 10
-    numCallsBlocks = 10
-    compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
+# def test_performance_get_id_catalogs(client):
+#     numCalls = 10
+#     numCallsBlocks = 10
+#     compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
 
-    numCalls = 10
-    numCallsBlocks = 50
-    compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
+#     numCalls = 10
+#     numCallsBlocks = 50
+#     compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
 
-    numCalls = 10
-    numCallsBlocks = 100
-    compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
+#     numCalls = 10
+#     numCallsBlocks = 100
+#     compute_performance_get_id_catalogs(numCalls, numCallsBlocks)
 
-    assert False
+#     assert False
 
 
 def compute_performance_get_id_catalogs(numCalls, numCallsBlocks):

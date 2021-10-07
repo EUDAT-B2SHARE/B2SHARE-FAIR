@@ -6,7 +6,7 @@ from pyld import jsonld
 from mapper import Model, Field, NestedField
 
 
-CONST_NUM_COMMUNITIES = 14
+CONST_NUM_COMMUNITIES = 21
 
 # base URL for tests: https://trng-b2share.eudat.eu/api/communities/e9b9792e-79fb-4b07-b6b4-b9c2bd06d095
 
@@ -59,6 +59,9 @@ class ModelTestCase(unittest.TestCase):
 
     def test_load_communities(self):
         models = list(MockModel.get_all())
+
+        # This test will fail if number of communities 
+        # at given B2SHARE instance changes.
         self.assertEqual(len(models), CONST_NUM_COMMUNITIES)
 
     def test_multiple_nested_model(self):

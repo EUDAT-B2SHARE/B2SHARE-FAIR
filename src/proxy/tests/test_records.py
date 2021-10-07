@@ -16,35 +16,35 @@ def test_get_record_by_id(client):
     assert result is not None
 
 
-def test_performance_get_all_records(client):
-    numCalls = 10
-    numCallsBlocks = 10
-    compute_performance_get_all_records(numCalls, numCallsBlocks)
+# def test_performance_get_all_records(client):
+#     numCalls = 10
+#     numCallsBlocks = 10
+#     compute_performance_get_all_records(numCalls, numCallsBlocks)
 
-    compute_performance_get_all_records(10, 50)
-    compute_performance_get_all_records(10, 100)
+#     compute_performance_get_all_records(10, 50)
+#     compute_performance_get_all_records(10, 100)
 
-    assert False
-
-
-def test_performance_get_id_records(client):
-    numCalls = 10
-    numCallsBlocks = 10
-    compute_performance_get_id_records(numCalls, numCallsBlocks)
-    compute_performance_get_id_records(10, 50)
-    compute_performance_get_id_records(10, 100)
-
-    assert False
+#     assert False
 
 
-def test_performance_get_qs_records(client):
-    numCalls = 10
-    numCallsBlocks = 10
-    compute_performance_get_qs_records(numCalls, numCallsBlocks)
-    compute_performance_get_qs_records(10, 50)
-    compute_performance_get_qs_records(10, 100)
+# def test_performance_get_id_records(client):
+#     numCalls = 10
+#     numCallsBlocks = 10
+#     compute_performance_get_id_records(numCalls, numCallsBlocks)
+#     compute_performance_get_id_records(10, 50)
+#     compute_performance_get_id_records(10, 100)
 
-    assert False
+#     assert False
+
+
+# def test_performance_get_qs_records(client):
+#     numCalls = 10
+#     numCallsBlocks = 10
+#     compute_performance_get_qs_records(numCalls, numCallsBlocks)
+#     compute_performance_get_qs_records(10, 50)
+#     compute_performance_get_qs_records(10, 100)
+
+#     assert False
 
 
 def compute_performance_get_all_records(numCalls, numCallsBlocks):
