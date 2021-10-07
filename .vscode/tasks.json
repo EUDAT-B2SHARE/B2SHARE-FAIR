@@ -1,0 +1,13 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        // Modified from https://stackoverflow.com/a/60608895
+        {
+            "label": "killgunicorndebugger",
+            "type": "shell",
+            "command": "ps fe | grep -e 'gunicorn proxy.app:api' | grep -v grep | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1"
+        }
+    ]
+}

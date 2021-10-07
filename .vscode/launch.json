@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        // From https://github.com/microsoft/vscode-python/issues/7131#issuecomment-525873210
+        {
+            "name": "Debug Unit Test",
+            "type": "python",
+            "request": "test",
+            "justMyCode": false,
+        },
+        // Modified from https://stackoverflow.com/a/60608895
+        {
+            "name": "Python: Falcon with Gunicorn",
+            "type": "python",
+            "request": "launch",
+            "program": "${env:VIRTUAL_ENV}/bin/gunicorn",
+            "gevent": true,
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/src/",
+            "args": [
+                "proxy.app:api",
+                "--bind=127.0.0.1:8080",
+                "--reload",
+                "-w",
+                "1",
+                "--timeout=7200"
+            ],
+            "postDebugTask": "killgunicorndebugger"
+        }
+    ]
+}
