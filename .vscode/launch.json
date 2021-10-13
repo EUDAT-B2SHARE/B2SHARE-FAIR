@@ -29,7 +29,7 @@
             "justMyCode": false,
             "cwd": "${workspaceFolder}/src/",
             "args": [
-                "proxy.app:api",
+                "proxy.app:app",
                 "--bind=127.0.0.1:8080",
                 "--reload",
                 "-w",
