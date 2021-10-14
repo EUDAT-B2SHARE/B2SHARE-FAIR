@@ -89,7 +89,7 @@ class RecordMetadataModel(Model):
     language = Field(name='language')
     version = Field(name='version')
     publisher = Field(name='publisher')
-
+    ePIC_PID = Field(name='ePIC_PID')
     descriptions = NestedField(name='descriptions', cls=Description, multiple=True)
     keywords = Field(name='keywords') #OBS: it should be an array (NestedField multiple) but there is no key/value in b2.record metadata keywords.
     license = NestedField(name='license', cls=License)

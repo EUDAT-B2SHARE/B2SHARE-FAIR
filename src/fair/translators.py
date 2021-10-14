@@ -1,4 +1,5 @@
 from pyld import jsonld
+import chevron
 #import rdflib
 
 
@@ -159,37 +160,113 @@ def assert_fields_community_catalog(community, catalog):
     assert community.restricted_submission == catalog["b2:restricted_submission"]
 
 
+# # B2SHARE: Record
+# # Level 3: Dataset metadata layer
+# def translate_dataset(record):
+
+#     dc_descriptions = []
+#     for description in record.metadata.descriptions:
+#         #print(description.description)
+#         dc_description = {
+#             "http://purl.org/dc/terms/description": description.description
+#         }
+#         dc_descriptions.append(dc_description)
+#         #merged_dict = {key: value for (key, value) in (dc_descriptions.items() + dc_description.items())}
+
+#     #jsonDescription = json.dumps(dc_descriptions)
+#     #print(dc_descriptions)
+
+#     #Should these mappings consider other metadata fields, such as "disciplines" and resource types?
+#     dcat_themes = []
+#     if record.metadata.keywords is not None:
+#         for keyword in record.metadata.keywords:
+#             dcat_theme = {
+#                 "http://www.w3.org/ns/dcat/theme": keyword
+#             }
+#             dcat_themes.append(dcat_theme)
+
+#     dcat_distributions = []
+#     for recordfile in record.files:
+#         dcat_distribution = {
+#             "http://www.w3.org/ns/dcat/distribution": recordfile.version_id #TODO: the most correct here is to use the file @id (which is based on the version_id) -> this would require to access the /files/ resource to retrieve the desired @id (to discuss)
+#         }
+#         dcat_distributions.append(dcat_distribution)
+
+#     dc_license = "no license metadata used"
+#     if record.metadata.license is not None:
+#         dc_license = record.metadata.license.license
+
+#     context = {
+#         # ontologies used in FDP according to spec
+#         "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+#         "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+#         "dcat" : "http://www.w3.org/ns/dcat/",
+#         "xsd" : "http://www.w3.org/2001/XMLSchema#",
+#         "owl" : "http://www.w3.org/2002/07/owl#",
+#         "dct" : "http://purl.org/dc/terms/",
+#         "lang" : "http://id.loc.gov/vocabulary/iso639-1/",
+#         "fdp" : "http://rdf.biosemantics.org/ontologies/fdp-o#",
+#         "foaf" : "http://xmlns.com/foaf/",
+#         "b2" : "https://b2share.eudat.eu/ontology/b2share/"
+#     }
+
+#     doc = {
+#         "@id": record.links.selflink,
+#         "@type": "dcat:Dataset",
+#         "http://purl.org/dc/terms/identifier": "dataRecord", #record.identifier,
+#         "http://purl.org/dc/terms/title": record.name,
+#         "http://purl.org/dc/terms/issued": record.created,
+#         "http://purl.org/dc/terms/modified": record.updated,
+
+#         "https://b2share.eudat.eu/ontology/b2share/hasCommunity": record.metadata.community,
+#         "http://purl.org/dc/terms/language": record.metadata.language,
+#         "http://purl.org/dc/terms/hasVersion": record.metadata.version,
+#         "http://purl.org/dc/terms/publisher": record.metadata.publisher,
+
+#         "http://purl.org/dc/terms/license": dc_license, #"testing...", # license,
+
+#         #TODO: check if it is the best way to serialize an array in JSON-LD (through a property defined in the internal ontology)
+#         "https://b2share.eudat.eu/ontology/b2share/hasDescriptions": dc_descriptions,
+#         "https://b2share.eudat.eu/ontology/b2share/hasThemes": dcat_themes,
+#         "https://b2share.eudat.eu/ontology/b2share/hasDistributions": dcat_distributions,
+#         "https://b2share.eudat.eu/ontology/b2share/hasDistributionsLink": record.links.files  # Check if the correct approach is to format the link to opint to /distributions/_id
+
+#     }
+
+#     #if len(record.metadata.descriptions) > 0:
+#     #    print(record.metadata.descriptions[0])
+#     #print(record.metadata.descriptions)
+
+#     result = jsonld.compact(doc, context)
+#     #normalized = jsonld.normalize(result)
+#     #print(normalized)
+
+#     return result
+
 # B2SHARE: Record
 # Level 3: Dataset metadata layer
 def translate_dataset(record):
 
-    dc_descriptions = []
+    dc_description_string = ''
     for description in record.metadata.descriptions:
-        #print(description.description)
-        dc_description = {
-            "http://purl.org/dc/terms/description": description.description
-        }
-        dc_descriptions.append(dc_description)
-        #merged_dict = {key: value for (key, value) in (dc_descriptions.items() + dc_description.items())}
+        dc_description_string = dc_description_string + '<http://purl.org/dc/terms/description/{}>'.format(description.description)
 
-    #jsonDescription = json.dumps(dc_descriptions)
-    #print(dc_descriptions)
+    # NTS: Should probably use 'disciplines' and not keywords
+    # dcat_themes = []
+    # if record.metadata.keywords is not None:
+    #     for keyword in record.metadata.keywords:
+    #         dcat_theme = {
+    #             "http://www.w3.org/ns/dcat/theme": keyword
+    #         }
+    #         dcat_themes.append(dcat_theme)
 
-    #Should these mappings consider other metadata fields, such as "disciplines" and resource types?
-    dcat_themes = []
-    if record.metadata.keywords is not None:
-        for keyword in record.metadata.keywords:
-            dcat_theme = {
-                "http://www.w3.org/ns/dcat/theme": keyword
-            }
-            dcat_themes.append(dcat_theme)
-
-    dcat_distributions = []
-    for recordfile in record.files:
-        dcat_distribution = {
-            "http://www.w3.org/ns/dcat/distribution": recordfile.version_id #TODO: the most correct here is to use the file @id (which is based on the version_id) -> this would require to access the /files/ resource to retrieve the desired @id (to discuss)
-        }
-        dcat_distributions.append(dcat_distribution)
+    ## We use record landing page as distribution_url
+    # dcat_distributions = []
+    # for recordfile in record.files:
+    #     dcat_distribution = {
+    #         "http://www.w3.org/ns/dcat/distribution": recordfile.version_id #TODO: the most correct here is to use the file @id (which is based on the version_id) -> this would require to access the /files/ resource to retrieve the desired @id (to discuss)
+    #     }
+    #     dcat_distributions.append(dcat_distribution)
 
     dc_license = "no license metadata used"
     if record.metadata.license is not None:
@@ -209,39 +286,25 @@ def translate_dataset(record):
         "b2" : "https://b2share.eudat.eu/ontology/b2share/"
     }
 
-    doc = {
-        "@id": record.links.selflink,
-        "@type": "dcat:Dataset",
-        "http://purl.org/dc/terms/identifier": "dataRecord", #record.identifier,
-        "http://purl.org/dc/terms/title": record.name,
-        "http://purl.org/dc/terms/issued": record.created,
-        "http://purl.org/dc/terms/modified": record.updated,
+    with open('fair/templates/dataset.mustache', 'r') as f:
+        catalog_body = chevron.render(
+            f,
+            {'publish_name': record.metadata.publisher,
+             'title': record.name,
+             'language_url': record.metadata.language,
+             'license_url': dc_license,
+             'dataset_id_url': record.identifier,
+             'themes': '<https://www.wikidata.org/wiki/Q1172284>',
+             'distribution_url': record.metadata.ePIC_PID,
+             'description': dc_description_string,
+             'version': record.metadata.version,
+             'dataset_id': record.identifier,
+             'dataset_url': record.links.selflink + '#metadataID'
+             }
+        )
+        a = catalog_body
 
-        "https://b2share.eudat.eu/ontology/b2share/hasCommunity": record.metadata.community,
-        "http://purl.org/dc/terms/language": record.metadata.language,
-        "http://purl.org/dc/terms/hasVersion": record.metadata.version,
-        "http://purl.org/dc/terms/publisher": record.metadata.publisher,
-
-        "http://purl.org/dc/terms/license": dc_license, #"testing...", # license,
-
-        #TODO: check if it is the best way to serialize an array in JSON-LD (through a property defined in the internal ontology)
-        "https://b2share.eudat.eu/ontology/b2share/hasDescriptions": dc_descriptions,
-        "https://b2share.eudat.eu/ontology/b2share/hasThemes": dcat_themes,
-        "https://b2share.eudat.eu/ontology/b2share/hasDistributions": dcat_distributions,
-        "https://b2share.eudat.eu/ontology/b2share/hasDistributionsLink": record.links.files  # Check if the correct approach is to format the link to opint to /distributions/_id
-
-    }
-
-    #if len(record.metadata.descriptions) > 0:
-    #    print(record.metadata.descriptions[0])
-    #print(record.metadata.descriptions)
-
-    result = jsonld.compact(doc, context)
-    #normalized = jsonld.normalize(result)
-    #print(normalized)
-
-    return result
-
+        return catalog_body
 
 # B2SHARE: File (contents)
 # Level 4: Distribution layer

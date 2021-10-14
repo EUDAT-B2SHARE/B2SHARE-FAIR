@@ -1,7 +1,6 @@
 import falcon
 from proxy.resources import CommnunityResource, WebAppResource, RecordResource, FileResource, WebAppResourceRDFXML
 
-
 #api = falcon.API()
 app = falcon.App()
 app.add_route('/fdp/', WebAppResource())

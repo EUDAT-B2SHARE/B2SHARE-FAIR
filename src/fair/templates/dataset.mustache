@@ -1,0 +1,32 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ldp: <http://www.w3.org/ns/ldp#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fdp-o: <http://purl.org/fdp/fdp-o#> .
+
+<{{&dataset_url}}>
+  a dcat:Resource, dcat:Dataset;
+  dcterms:language <{{&language_url}}>;
+  dcterms:license <{{&license_url}}>;
+  fdp-o:metadataIdentifier <{{&dataset_id_url}}>;
+  dcterms:isPartOf <{{&catalog_url}}>;
+  dcat:theme {{themes}};
+  dcat:distribution <{{&distribution_url}}>;
+  rdfs:label "{{title}}";
+  dcterms:title "{{title}}";
+  dcterms:description "{{description}}";
+  dcterms:hasVersion "{{version}}";
+  dcterms:publisher [ a foaf:Agent;
+      foaf:name "{{publish_name}}";
+    ] .
+
+<{{&dataset_id_url}}> a <http://purl.org/spar/datacite/Identifier>;
+  dcterms:identifier "{{dataset_id}}" .
+
+<{{&distribution_container_url}}> a ldp:DirectContainer;
+  dcterms:title "Distributions";
+  ldp:membershipResource <{{&dataset_url}}>;
+  ldp:hasMemberRelation dcat:distribution;
+  ldp:contains <{{&distribution_url}}> .

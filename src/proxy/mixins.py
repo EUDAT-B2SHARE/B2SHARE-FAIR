@@ -25,3 +25,4 @@ class ReadResource:
 
     def on_get(self, req, resp, _id=None):
         resp.media = self._get()
+
